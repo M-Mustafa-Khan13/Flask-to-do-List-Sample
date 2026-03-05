@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %} Tasks {% endblock %}
+
+{% block content %}
+<div class="your_tasks">
+
+    <h2>Your Tasks</h2>
+    <form action="{{ url_for('tasks.add_task') }}" method="post" class="text_form">
+        <input type="text" name="title" placeholder="New Task" required>
+        <button type="submit" class="btn">Add</button>
+    </form>
+
+    {% if tasks %}
+    <table class="table-class">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Update Status</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr class="status-{{ task.status | lower }}">
+                <td>{{ loop.index }}</td>
+                <td>{{ task.title }}</td>
+                <td><span class="badge badge-{{ task.status | lower }}">{{ task.status }}</span></td>
+                <td>
+                    <form action="{{ url_for('tasks.update_task_status', task_id=task.id) }}" method="post" class="status-form">
+                        <select name="status" class="status-select">
+                            <option value="pending"  {% if task.status == 'pending'  %}selected{% endif %}>Pending</option>
+                            <option value="working"  {% if task.status == 'working'  %}selected{% endif %}>Working</option>
+                            <option value="done"     {% if task.status == 'done'     %}selected{% endif %}>Done</option>
+                        </select>
+                        <button type="submit" class="btn btn-update">Update</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="{{ url_for('tasks.delete_task', task_id=task.id) }}" method="post">
+                        <button type="submit" class="btn btn-delete">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p class="no-tasks">No tasks yet. Add one above!</p>
+    {% endif %}
+
+</div>
+{% endblock %}
