@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %} To-DO App {% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>My TO-DO APP</h1>
+            <nav>
+                <a href="{{ url_for('tasks.view_tasks') }}">Home</a>
+                {% if 'user' in session %}
+                    <a href="{{ url_for('auth.logout') }}">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('auth.login') }}">Login</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main class="main_cont">
+
+        {% with messages = get_flashed_messages(with_categories=True) %}
+            {% for category, message in messages %}
+                <span class="flash-data"
+                      data-category="{{ category }}"
+                      data-message="{{ message }}"
+                      style="display:none;"></span>
+            {% endfor %}
+        {% endwith %}
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+    <!-- Toast notification container -->
+    <div id="toast-container"></div>
+
+    <!-- Image src holders for JS to read -->
+    <span id="img-tick" data-src="{{ url_for('static', filename='tick.jpg') }}"  style="display:none;"></span>
+    <span id="img-dele" data-src="{{ url_for('static', filename='dele.webp') }}" style="display:none;"></span>
+
+    <footer>
+        <div class="fcon">
+            <p>&copy; {{ 2026 }} My Flask TO-DO-APP</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='JS/script.js') }}"></script>
+</body>
+</html>
